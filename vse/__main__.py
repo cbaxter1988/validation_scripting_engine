@@ -1,13 +1,7 @@
-import sys
-from pathlib import Path
-
-print(sys.path)
-
 import argparse
 from vse.api.rpc import VSERPCServer
 from vse.api.rest import run_rest_server
-from env import DEPLOY_MODE
-
+from vse.env import DEPLOY_MODE
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='VSE-CLI Tool')
@@ -30,7 +24,6 @@ if __name__ == "__main__":
         else:
             s.run()
 
-        print("it works")
     elif args.serve_rest:
         run_rest_server()
     else:

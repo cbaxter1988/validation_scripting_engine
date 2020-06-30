@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-   name='vse',
+   name='VSE',
    version='1.0',
    description='Validation Scripting Engine',
    author='Courtney S Baxter Jr',

@@ -3,10 +3,10 @@ from datetime import datetime
 from marshmallow import Schema, post_load, fields
 
 from vse.core.mapping_agent import VSEActionMapper
-from vse.handlers.base import HandlerResult, Handler
+from vse.handlers.base import Handler
 from vse.core.task import VSETask
 from vse.core.audit import VSEAudit
-from env import MAX_FAIL_LIMIT
+from vse.env import MAX_FAIL_LIMIT
 
 
 class VSEResult:

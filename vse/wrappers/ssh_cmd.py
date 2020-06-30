@@ -1,9 +1,8 @@
-import json
 from marshmallow import Schema, post_load, fields, validates, ValidationError
 import requests
 import ipaddress
 from vse.core.constants import JSON_RESPONSE_HEADERS, DEVICE_TYPES
-from env import SSH_ENDPOINT, CONNECTOR_URL
+from vse.env import SSH_ENDPOINT
 from vse.wrappers import Wrapper, WrapperResult
 
 

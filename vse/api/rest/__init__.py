@@ -1,7 +1,7 @@
 from bottle import route, response, request, run
 from vse.core import VSE
 from vse.core.audit import new_audit
-from env import DEPLOY_MODE, VSE_REST_PORT, VSE_REST_HOST
+from vse.env import DEPLOY_MODE, VSE_REST_PORT, VSE_REST_HOST
 
 import logging
 
@@ -35,6 +35,7 @@ def run_audit():
 
 def run_rest_server():
     if DEPLOY_MODE == "dev":
+        logging.basicConfig(level=logging.DEBUG)
         run(host=VSE_REST_HOST, port=VSE_REST_PORT, debug=True)
     else:
         run(host=VSE_REST_HOST, port=VSE_REST_PORT)

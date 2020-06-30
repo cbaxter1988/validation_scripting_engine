@@ -1,7 +1,7 @@
 import logging
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
-from env import DEPLOY_MODE
+from vse.env import DEPLOY_MODE
 from base64 import b64decode
 from vse.core.audit import new_audit
 from vse.api.rpc.services.vse import ServiceVSE

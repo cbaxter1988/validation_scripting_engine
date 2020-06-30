@@ -1,11 +1,7 @@
-import sys
-from pathlib import Path
-
-
 import argparse
 from vse.api.rpc import VSERPCServer
 from vse.api.rest import run_rest_server
-from env import DEPLOY_MODE
+from vse.env import DEPLOY_MODE
 
 
 if __name__ == "__main__":
