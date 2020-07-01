@@ -56,10 +56,14 @@ class Handler(IHandler):
 
         self._extract_params()
         self._prep_results()
-        self.validate_params()
+        # self.validate_params()
 
     def execute(self, **kwargs) -> HandlerResult:
         raise NotImplementedError
+
+    def set_task(self, task):
+        self.task = task
+        return True
 
     def _extract_params(self):
         """
