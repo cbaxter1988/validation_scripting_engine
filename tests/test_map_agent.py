@@ -1,6 +1,7 @@
 import unittest
 from vse.core.mapping_agent import VSEMapAgent, MappingAgentError
-from vse.handlers import TestHandlerParams, TestHandler
+from vse.core.task import make_vse_task
+from vse.handlers import TestHandlerParams, TestHandler, Handler
 
 
 class BadClass:
@@ -8,55 +9,79 @@ class BadClass:
 
 
 class MapAgentTestCase(unittest.TestCase):
-    def test_add_handler(self):
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.task = make_vse_task(
+            {
+                "action": "test_handler",
+                "description": "Test Handler for APP",
+                "expectation": True,
+                "params": {
+                    "poke": True
+                }
+            }
+        )
+
+    def test_register_handler(self):
         ma = VSEMapAgent()
 
         with self.assertRaises(MappingAgentError):
-            ma.add_handler("test_handler", BadClass, BadClass)
+            ma.register_handler("test_handler", "BadType", "BadType")
 
         with self.assertRaises(MappingAgentError):
-            ma.add_handler("test_handler", "BadType", "BadType")
+            ma.register_handler("test_handler", BadClass(), BadClass())
 
         with self.assertRaises(MappingAgentError):
-            ma.add_handler("test_handler", BadClass(), BadClass())
+            ma.register_handler("test_handler", TestHandler, TestHandlerParams())
 
-        self.assertTrue(ma.add_handler("test_handler", TestHandler, TestHandlerParams()))
+        with self.assertRaises(MappingAgentError):
+            ma.register_handler("test_handler", TestHandler(), TestHandlerParams)
+
+        self.assertTrue(ma.register_handler("test_handler", TestHandler, TestHandlerParams))
 
         self.assertEqual(1, ma.get_handler_count())
 
     def test_get_handler(self):
         ma = VSEMapAgent()
 
-        ma.add_handler("test_handler", TestHandler, TestHandlerParams())
+        ma.register_handler("test_handler", TestHandler, TestHandlerParams)
 
-        resp = ma.get_handler("test_handler")
-        self.assertIsInstance(resp, dict)
+        resp = ma.get_handler(self.task.action, self.task)
+        self.assertIsInstance(resp, Handler)
 
-        resp = ma.get_handler("bad_request")
-        self.assertEqual(resp, None)
+        with self.assertRaises(MappingAgentError):
+            ma.get_handler("bad_request", self.task)
 
     def test_update(self):
         class UpdateTestHandler(TestHandler):
-            pass
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
 
         class UpdateHandlerParams(TestHandlerParams):
-            pass
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
 
         ma = VSEMapAgent()
-        ma.add_handler("test_handler", TestHandler, TestHandlerParams())
+        ma.register_handler("test_handler", TestHandler, TestHandlerParams)
 
-        self.assertTrue(ma.update("test_handler", UpdateTestHandler, UpdateHandlerParams()))
+        result = ma.update("test_handler", UpdateTestHandler, UpdateHandlerParams)
+        self.assertTrue(result)
+        #
+        handler = ma.get_handler("test_handler", self.task)
+        self.assertTrue(handler.__class__ == UpdateTestHandler)
+        #
+        result = ma.update("bad_handler", UpdateTestHandler, UpdateHandlerParams)
+        self.assertFalse(result)
 
-        handler = ma.get_handler("test_handler")
-        self.assertTrue(handler['handler'] == UpdateTestHandler)
-        self.assertIsInstance(handler['params_schema'], UpdateHandlerParams)
-
-        self.assertFalse(ma.update("bad_handler", UpdateTestHandler, UpdateHandlerParams()))
+        with self.assertRaises(MappingAgentError):
+            ma.update("test_handler", UpdateTestHandler(), UpdateHandlerParams)
+            ma.update("test_handler", UpdateTestHandler, UpdateHandlerParams())
 
     def test_delete_handler(self):
         ma = VSEMapAgent()
 
-        ma.add_handler("test_handler", TestHandler, TestHandlerParams())
+        ma.register_handler("test_handler", TestHandler, TestHandlerParams)
 
         resp = ma.delete_handler("test_handler")
         self.assertTrue(resp)

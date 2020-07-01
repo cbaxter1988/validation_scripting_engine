@@ -1,11 +1,13 @@
 from abc import abstractmethod, ABC
 
 from vse.core.maps import ACTION_MAP
-from vse.core.exceptions import MappingAgentError
 from vse.handlers import HandlerResult, Handler, DefaultHandler, ParamsSchema
 
 from vse.core.task import VSETask
-from vse.core.exceptions import InvalidHandlerErr
+from vse.core.exceptions import InvalidHandlerErr, MappingAgentError
+
+from abc import ABCMeta
+from marshmallow.schema import SchemaMeta
 
 
 class IMapper(ABC):
@@ -27,48 +29,77 @@ class VSEMapAgent(MapAgent):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def add_handler(self, h_name, handler, params_schema):
+    def register_handler(self, action_name, handler, params_schema):
         """Adds new Handler to the Map"""
         try:
-            if not issubclass(handler, Handler):
-                raise MappingAgentError("Must be the class, if param is of type Handler, resubmit without '()' ")
+            self.__check_handler_params(handler, params_schema)
+        except MappingAgentError:
+            raise
 
-            if not isinstance(params_schema, ParamsSchema):
-                raise MappingAgentError("Must be of type ParamsSchema")
-
-            self.map[h_name] = {}
-            self.map[h_name]['handler'] = handler
-            self.map[h_name]['params_schema'] = params_schema
+        if SchemaMeta == params_schema.__class__ and ABCMeta == handler.__class__:
+            self.map[action_name] = {}
+            self.map[action_name]['handler'] = handler
+            self.map[action_name]['params_schema'] = params_schema
             return True
-        except Exception:
+        else:
+            raise MappingAgentError(f"Must be the class, not instances {Handler}, {ParamsSchema}' ")
 
-            raise MappingAgentError(
-                "Must register using Class for example MA.add_handler(Handler, ParamsSchema), resubmit without '()' ")
-
-    def get_handler(self, h_name):
+    def get_handler(self, action_name, task: VSETask) -> Handler:
         """returns the requested handler"""
-        return self.map.get(h_name)
+        if not isinstance(task, VSETask):
+            raise MappingAgentError(f"Invalid Task Type, Must be of type {VSETask}")
+
+        handler = self.map.get(action_name)
+        if handler is False or handler is None:
+            raise MappingAgentError(f"{action_name} not found")
+
+        handler_class = handler['handler']
+        handler_param_schema = handler['params_schema']
+
+        handler = handler_class(
+            name=task.action,
+            params=task.params,
+            task=task,
+            params_schema=handler_param_schema()
+        )
+
+        return handler
 
     def get_handler_count(self):
         """returns total count of current handlers in the map"""
         return len(self.map)
 
-    def delete_handler(self, h_name):
-        result = self.map.get(h_name)
+    def delete_handler(self, action_name):
+        result = self.map.get(action_name)
         if result:
-            del self.map[h_name]
+            del self.map[action_name]
             return True
 
         return False
 
     def update(self, h_name, handler, params_schema):
         try:
-            self.map[h_name]['handler'] = handler
-            self.map[h_name]['params_schema'] = params_schema
-            return True
+            self.__check_handler_params(handler, params_schema)
+        except MappingAgentError:
+            raise
+
+        try:
+
+            if SchemaMeta == params_schema.__class__ and ABCMeta == handler.__class__:
+                self.map[h_name]['handler'] = handler
+                self.map[h_name]['params_schema'] = params_schema
+                return True
 
         except KeyError:
             return False
+
+    @staticmethod
+    def __check_handler_params(handler, params_schema):
+        if isinstance(handler, Handler):
+            raise MappingAgentError(f"Must be the class, not instances {Handler}' ")
+
+        if isinstance(params_schema, ParamsSchema):
+            raise MappingAgentError(f"Must be the class, not instance {ParamsSchema}")
 
 
 class VSEActionMapper(IMapper):
