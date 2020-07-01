@@ -8,5 +8,7 @@ from vse.handlers import (
     TestHandlerParams
 )
 
-VSE_MAP_AGENT.register_handler('test_handler', TestHandler, TestHandlerParams)
-VSE_MAP_AGENT.register_handler('h_find_lines', FindLinesHandler, FindLinesParamSchema)
+
+def register_handlers():
+    VSE_MAP_AGENT.register_handler('test_handler', TestHandler, TestHandlerParams)
+    VSE_MAP_AGENT.register_handler('h_find_lines', FindLinesHandler, FindLinesParamSchema)

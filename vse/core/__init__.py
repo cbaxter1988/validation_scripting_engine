@@ -51,7 +51,6 @@ class VSE:
         """
 
         self.audits = []
-        self.mapper = VSEActionMapper()
         self.results = []
 
     def run(self) -> list:
@@ -66,7 +65,7 @@ class VSE:
 
             if audit.has_task():
                 for task in audit.tasks:
-                    handler = self.get_task_handler(task)
+                    handler = VSE_MAP_AGENT.get_handler(task.action, task)
 
                     h_result = handler.execute()
                     if h_result.status == task.expectation:
@@ -92,7 +91,8 @@ class VSE:
         """
 
         if isinstance(task, VSETask):
-            handler = self.mapper.get_handler(task)
+            handler = VSE_MAP_AGENT.get_handler(task.action, task)
+
             return handler
 
         raise Exception("Invalid Type Provided, Must be of type VSETask")
@@ -149,7 +149,6 @@ def main():
         '''
         Validation Scripting Engine(VSE) is the validation tool used to automate control compliance based on intended
         expectations. 
-
 
         '''
 

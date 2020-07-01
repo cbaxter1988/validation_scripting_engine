@@ -78,10 +78,10 @@ class MapAgentTestCase(unittest.TestCase):
             ma.update("test_handler", UpdateTestHandler(), UpdateHandlerParams)
             ma.update("test_handler", UpdateTestHandler, UpdateHandlerParams())
 
-    def _test_delete_handler(self):
+    def test_delete_handler(self):
         ma = VSEMapAgent()
 
-        ma.register_handler("test_handler", TestHandler, TestHandlerParams())
+        ma.register_handler("test_handler", TestHandler, TestHandlerParams)
 
         resp = ma.delete_handler("test_handler")
         self.assertTrue(resp)

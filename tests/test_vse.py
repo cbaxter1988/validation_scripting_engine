@@ -5,7 +5,9 @@ from vse.core import VSE, VSEActionMapper, VSESchema, Handler, VSEAudit, VSEResu
 from vse.core.task import VSETask, VSETaskSchema
 from vse.handlers.base import IHandler
 from vse.handlers.base import HandlerResult
+from vse import register_handlers
 
+register_handlers()
 
 class VSETestCase(unittest.TestCase):
 
