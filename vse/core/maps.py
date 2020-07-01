@@ -1,4 +1,4 @@
-from vse.handlers import BaseHandler, DefaultHandler
+from vse.handlers.base import BaseHandler, DefaultHandler
 from vse.handlers.test import TestHandler
 from vse.handlers.ciscoconfparse import FindLinesHandler
 from vse.handlers.schemas.ciscoconfparse import FindLinesParamSchema

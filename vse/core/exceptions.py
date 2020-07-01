@@ -14,3 +14,8 @@ class ParamSchemaValidationError(BaseException):
     """
     Used when Handlers fails param schema validation
     """
+
+class MappingAgentError(BaseException):
+    """
+    Used when MappingAgent experinces an issue.
+    """

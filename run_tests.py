@@ -6,7 +6,8 @@ from tests import (
     test_vse_audit,
     test_vse_audit_task,
     test_wrapper_ssh_cmd,
-    test_ssh_config
+    test_ssh_config,
+    test_map_agent
 )
 
 # Creates loader and empty test suite.
@@ -21,6 +22,7 @@ def load_tests():
     suite.addTests(loader.loadTestsFromModule(test_vse_audit_task))
     suite.addTests(loader.loadTestsFromModule(test_wrapper_ssh_cmd))
     suite.addTests(loader.loadTestsFromModule(test_ssh_config))
+    suite.addTests(loader.loadTestsFromModule(test_map_agent))
 
 
 def run_tests():

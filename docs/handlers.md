@@ -1,15 +1,21 @@
-This document will discuss how to create new handlers for the VSE. There are 3 major steps when establishing new Handlers for the system
+This document will discuss how to create new handlers for the VSE service. There are 3 major steps when establishing new Handlers for the system
 
 - Create Schema that will be used to validate the parameters or options required for your Handler.
-- Create CustomHandler Class and complete Handler.execute() method.
+  - The ParamsSchema inherits the marshmallow.Schema class.
+  - When defining parameters for your Params class use the "fields" module. This module is a the exposed marshmallow.fields module. Please Marshmallow Documentation for more information. [Marshmallow Fields Doc](https://marshmallow.readthedocs.io/en/stable/marshmallow.fields.html)
+- Create CustomHandler Class and add your logic in the specified Handler.execute() method.
 - Register Handler in ActionMap. 
 
 
 
-Handler Template 
+Custom Handler Boilerplate
 
 ```python
-from app.vse.handlers import Handler, HandlerResult
+from vse.handlers import Handler, HandlerResult, ParamsSchema, fields
+
+
+class TestHandlerParams(ParamsSchema):
+    poked = fields.Boolean(required=True)
 
 
 class CustomHandler(Handler): # TODO: Update Handler name

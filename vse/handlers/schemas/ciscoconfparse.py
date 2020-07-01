@@ -1,6 +1,6 @@
 from marshmallow import fields
 
-from vse.handlers.schemas import ParamsSchema, OptsSchema
+from vse.handlers.schemas.base import ParamsSchema, OptsSchema
 
 
 class CiscoConfParseSchema(ParamsSchema):

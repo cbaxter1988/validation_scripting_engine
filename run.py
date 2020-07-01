@@ -3,7 +3,6 @@ from vse.api.rpc import VSERPCServer
 from vse.api.rest import run_rest_server
 from vse.env import DEPLOY_MODE
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='VSE-CLI Tool')
     parser.add_argument('--serve_rpc',

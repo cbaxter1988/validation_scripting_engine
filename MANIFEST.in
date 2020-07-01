@@ -1,5 +1,3 @@
 include requirements.txt
-include env.py
-include run.py
 include *.py
 include docker/*
