@@ -1,0 +1,19 @@
+version: "3.1"
+services:
+    vse_rpc:
+        image: cbaxter1988/vse
+        ports:
+          - 5001:5001
+        environment:
+          - VSE_RPC_PORT=5001
+          - DEBUG=true
+        command: --serve_rpc
+
+    vse_rest:
+      image: cbaxter1988/vse
+      ports:
+        - 5000:5000
+      environment:
+        - VSE_REST_PORT=5000
+        - DEBUG=true
+      command: --serve_rest

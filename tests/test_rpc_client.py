@@ -7,9 +7,9 @@ docker run -p 8000:8000 -d cbaxter1988/auditor:api
 """
 
 # HOST = "192.168.1.22"
-HOST = "io.cbaxterjr.com"
+HOST = "apps.cbaxterjr.com"
 # HOST = "localhost"
-PORT = 80
+PORT = 5001
 
 
 class MyTestCase(unittest.TestCase):

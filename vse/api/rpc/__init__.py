@@ -1,7 +1,7 @@
 import logging
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
-from vse.env import DEPLOY_MODE
+from vse.env import DEPLOY_MODE, VSE_RPC_PORT
 from base64 import b64decode
 from vse.core.audit import new_audit
 from vse.api.rpc.services.vse import ServiceVSE
@@ -56,9 +56,9 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
 
 class VSERPCServer:
 
-    def __init__(self, bind_ip="0.0.0.0", bind_port=8000):
+    def __init__(self, bind_ip="0.0.0.0", bind_port=VSE_RPC_PORT):
         self.bind_ip = bind_ip
-        self.bind_port = bind_port
+        self.bind_port = int(bind_port)
 
         self._server = SimpleXMLRPCServer
 

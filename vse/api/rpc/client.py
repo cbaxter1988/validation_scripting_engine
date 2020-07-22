@@ -23,7 +23,7 @@ class ClientRequest:
 
 class VSERPCClient:
     def __init__(self, host="localhost", port=80):
-        self._client = xmlrpc.client.ServerProxy(f'http://{host}/rpc/vse', allow_none=True)
+        self._client = xmlrpc.client.ServerProxy(f'http://{host}:{port}/RPC2', allow_none=True)
         # self._client = xmlrpc.client.ServerProxy(f'http://{host}:{port}', allow_none=True)
 
     def get_methods(self):
